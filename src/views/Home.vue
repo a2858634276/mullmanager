@@ -9,23 +9,24 @@
                     <h2 class="middle">电商后台管理系统</h2>
                 </el-col>
                 <el-col :span="1">
-                    <a href="" class="loginout">退出</a>
+                    <a href="" class="loginout"
+                    @click="handleSignout()">退出</a>
                 </el-col>
         </el-row>
     </el-header>
     <el-container>
         <el-aside width="200px" class="aside">
             <el-menu
-              router="true"
-              unique-opened="true"
+              :router="true"
+              :unique-opened="true"
               default-active="1"
-              class="el-menu-vertical-demo">
-                <el-submenu index="/users">
+              class="menu">
+                <el-submenu index="1">
                     <template slot="title">
                         <i class="el-icon-location"></i>
                         <span>用户管理</span>
                     </template>
-                    <el-menu-item index="1-1">
+                    <el-menu-item index="/users">
                       <i class="el-icon-menu"></i>
                       用户列表
                     </el-menu-item>
@@ -90,7 +91,28 @@
 </template>
 
 <script>
-export default {}
+export default {
+  beforeCreate () {
+    const token = sessionStorage.getItem('token')
+    if (!token) {
+      this.$router.push('/login')
+      this.$message.warning('请先登录')
+    } else {
+      this.$message.success('登录成功')
+      this.$router.push('/')
+    }
+  },
+  methods: {
+    handleSignout () {
+      // 删除session中的token
+      sessionStorage.clear('token')
+      // 跳转到登陆页
+      this.$router.push({name: 'login'})
+      // 提示 退出登录
+      this.$message.success('退出成功')
+    }
+  }
+}
 </script>
 
 <style>
@@ -120,5 +142,8 @@ export default {}
 .header .loginout {
     line-height: 60px;
     text-decoration: none;
+}
+.menu {
+  height: 100%;
 }
 </style>

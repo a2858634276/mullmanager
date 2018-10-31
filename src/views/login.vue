@@ -1,13 +1,16 @@
 <template>
   <div class="login-wrap">
     <el-form class="login-form" label-position="top" label-width="80px">
+      <h2>用户登录</h2>
       <el-form-item label="用户名">
         <el-input v-model="formdata.username"></el-input>
       </el-form-item>
       <el-form-item label="密码">
         <el-input v-model="formdata.password"></el-input>
       </el-form-item>
-      <el-button class="login-button" type="primary" plain>登录</el-button>
+      <el-button class="login-button"
+        type="primary" plain
+        @click="handleLogin()">登录</el-button>
     </el-form>
   </div>
 </template>
@@ -19,6 +22,20 @@ export default {
       formdata: {
         usernmae: '',
         password: ''
+      }
+    }
+  },
+  methods: {
+    async handleLogin () {
+      const res = await this.$http.post('login', this.formdata)
+      const {meta} = res.data
+      if (meta.status === 200) {
+        const token = res.data.data.token
+        sessionStorage.setItem('token', token)
+        this.$router.push('/')
+        this.$message.success(meta.msg)
+      } else {
+        this.$message.error(meta.msg)
       }
     }
   }

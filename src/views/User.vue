@@ -201,7 +201,7 @@ export default {
       // 所有角色(主管/测试角色...)
       roles: [],
       // 当前角色的id
-      userId: 0
+      currUserId: 0
     }
   },
   created () {
@@ -212,7 +212,7 @@ export default {
     // 分配用户权限 -> 发送请求
     async setRole () {
       // 发送请求
-      const res = await this.$http.put(`users/${this.userId}/role`, {rid: this.currRoleId})
+      const res = await this.$http.put(`users/${this.currUserId}/role`, {rid: this.currRoleId})
       console.log(res)
       const {
         meta: {msg, status}
@@ -229,7 +229,7 @@ export default {
     // 分配用户权限 -> 显示对话框
     async showRoleBox (user) {
       // 将用户id赋值给 userId
-      this.userId = user.id
+      this.currUserId = user.id
       this.username = user.username
       this.dialogFormVisibleSetrole = true
       // 发送请求
